@@ -10,6 +10,8 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
+
 
 class User extends Authenticatable
 {
@@ -17,6 +19,7 @@ class User extends Authenticatable
     use HasFactory;
     use HasProfilePhoto;
     use HasTeams;
+    use HasRoles;
     use Notifiable;
     use TwoFactorAuthenticatable;
 
@@ -29,6 +32,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'super_admin',
     ];
 
     /**
@@ -65,8 +69,19 @@ class User extends Authenticatable
         ];
     }
 
+    function add_personal_team(User $user)
+    {
+        $team = Team::create([
+            'user_id' => $user->id,
+            'name' => $user->name . "'s Team",
+            'personal_team' => true,
+        ]);
+
+        $user->current_team_id = $team->id;
+        $user->save();
+    }
     /**
-     * Determina si l'usuari és un super administrador.
+     * Determine if the user is a super administrator.
      *
      * @return bool
      */
@@ -76,7 +91,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Obté l'usuari que ha provat aquest usuari.
+     * Get the user that tested this user.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */

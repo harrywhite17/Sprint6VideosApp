@@ -2,6 +2,10 @@
 
 use App\Models\User;
 use App\Models\Team;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Hash;
 
 if (!function_exists('create_default_professor')) {
     function create_default_professor()
@@ -9,7 +13,7 @@ if (!function_exists('create_default_professor')) {
         $professor = User::create([
             'name' => 'Default Professor',
             'email' => 'professor@videosapp.com',
-            'password' => \Hash::make('123456789'),
+            'password' => Hash::make('123456789'),
             'super_admin' => false,
         ]);
 
@@ -39,7 +43,7 @@ if (!function_exists('create_regular_user')) {
         $user = User::create([
             'name' => 'Regular User',
             'email' => 'regular@videosapp.com',
-            'password' => \Hash::make('123456789'),
+            'password' => Hash::make('123456789'),
             'super_admin' => false,
         ]);
 
@@ -55,9 +59,12 @@ if (!function_exists('create_video_manager_user')) {
         $user = User::create([
             'name' => 'Video Manager',
             'email' => 'videosmanager@videosapp.com',
-            'password' => \Hash::make('123456789'),
+            'password' => Hash::make('123456789'),
             'super_admin' => false,
         ]);
+
+        $role = Role::firstOrCreate(['name' => 'video-manager']);
+        $user->assignRole($role);
 
         add_personal_team($user);
 
@@ -71,7 +78,7 @@ if (!function_exists('create_superadmin_user')) {
         $user = User::create([
             'name' => 'Super Admin',
             'email' => 'superadmin@videosapp.com',
-            'password' => \Hash::make('123456789'),
+            'password' => Hash::make('123456789'),
             'super_admin' => true,
         ]);
 
@@ -84,7 +91,7 @@ if (!function_exists('create_superadmin_user')) {
 if (!function_exists('define_gates')) {
     function define_gates()
     {
-        \Illuminate\Support\Facades\Gate::define('manage-videos', function ($user) {
+        Gate::define('manage-videos', function ($user) {
             return $user->isSuperAdmin() || $user->hasRole('video-manager');
         });
     }
@@ -101,7 +108,7 @@ if (!function_exists('create_permissions')) {
         ];
 
         foreach ($permissions as $permission) {
-            \Spatie\Permission\Models\Permission::firstOrCreate(['name' => $permission]);
+            Permission::firstOrCreate(['name' => $permission]);
         }
 
         $roles = [
@@ -111,7 +118,7 @@ if (!function_exists('create_permissions')) {
         ];
 
         foreach ($roles as $role => $rolePermissions) {
-            $role = \Spatie\Permission\Models\Role::firstOrCreate(['name' => $role]);
+            $role = Role::firstOrCreate(['name' => $role]);
             $role->syncPermissions($rolePermissions);
         }
     }

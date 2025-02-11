@@ -8,3 +8,8 @@ Route::get('/', function () {
 });
 
 Route::get('/videos/{id?}', [VideosController::class, 'show'])->name('videos.show');
+
+// Ensure this route is defined
+Route::middleware(['auth'])->group(function () {
+    Route::get('/videos/manage', [VideosController::class, 'manage'])->name('videos.manage');
+});

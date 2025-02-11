@@ -29,4 +29,10 @@ class VideoTest extends TestCase
 
         $response->assertStatus(404);
     }
+    public function test_users_can_view_videos()
+    {
+        $video = Video::factory()->create();
+        $response = $this->actingAs(User::factory()->create())->get('/videos/' . $video->id);
+        $response->assertStatus(200);
+    }
 }

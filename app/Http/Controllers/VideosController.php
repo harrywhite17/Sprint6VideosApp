@@ -21,6 +21,12 @@ class VideosController extends Controller
 
         
     }
+
+    public function manage()
+    {
+        return view('videos.manage');
+    }
+
     public function testedby()
     {
         return \Tests\Feature\Video\VideoTest::class;

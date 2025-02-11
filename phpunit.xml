@@ -4,6 +4,9 @@
          bootstrap="vendor/autoload.php"
          colors="true"
 >
+    <bootstrap>tests/bootstrap.php</bootstrap>
+
+
     <testsuites>
         <testsuite name="Unit">
             <directory>tests/Unit</directory>
@@ -30,4 +33,5 @@
         <env name="SESSION_DRIVER" value="array"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
     </php>
+
 </phpunit>
