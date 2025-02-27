@@ -23,16 +23,22 @@
             justify-content: center;
         }
         nav a {
-            color: #fff;
-            text-decoration: none;
             margin: 0 15px;
             font-size: 16px;
-        }
-        nav a:hover {
             text-decoration: underline;
         }
         main {
             padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .video-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
         }
         footer {
             background-color: #333;
@@ -44,6 +50,7 @@
             width: 100%;
         }
     </style>
+    @yield('styles')
 </head>
 <body>
 <div id="app">
@@ -54,14 +61,16 @@
 
     <!-- Navigation Bar -->
     <nav>
-        <a href="/">Home</a>
-        <a href="/about">About</a>
-        <a href="/contact">Contact</a>
+        <a href="{{ route('videos.index') }}">Home</a>
+        <a href="{{ route('videos.manage.index') }}">Manage Videos</a>
+        <a href="{{ route('videos.manage.create') }}">Create Video</a>
     </nav>
 
     <!-- Main Content -->
     <main>
-        {{ $slot }}
+        <div class="video-container">
+            @yield('content')
+        </div>
     </main>
 
     <!-- Footer Section -->

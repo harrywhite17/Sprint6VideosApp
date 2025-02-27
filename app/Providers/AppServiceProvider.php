@@ -27,9 +27,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
-
         $this->defineGates();
-        $this->createPermissions();
     }
 
     /**
@@ -42,35 +40,5 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('manage-videos', function ($user) {
             return $user->hasRole('video-manager') || $user->isSuperAdmin();
         });
-    }
-
-    /**
-     * Create permissions for the application.
-     *
-     * @return void
-     */
-    protected function createPermissions()
-    {
-        $permissions = [
-            'view videos',
-            'create videos',
-            'edit videos',
-            'delete videos',
-        ];
-
-        foreach ($permissions as $permission) {
-            Permission::firstOrCreate(['name' => $permission]);
-        }
-
-        $roles = [
-            'regular' => ['view videos'],
-            'video-manager' => ['view videos', 'create videos', 'edit videos', 'delete videos'],
-            'super-admin' => $permissions,
-        ];
-
-        foreach ($roles as $role => $rolePermissions) {
-            $role = Role::firstOrCreate(['name' => $role]);
-            $role->syncPermissions($rolePermissions);
-        }
     }
 }

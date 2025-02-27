@@ -6,6 +6,8 @@ use Illuminate\Database\Seeder;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use App\Helpers\VideoHelper;
+use UserHelpers;
 
 class DatabaseSeeder extends Seeder
 {
@@ -16,67 +18,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call([
-            PermissionsSeeder::class,
-            UsersSeeder::class,
-        ]);
-    }
-}
+        // Create users
+        $userHelpers = new UserHelpers();
 
-class PermissionsSeeder extends Seeder
-{
-    public function run()
-    {
-        $permissions = [
-            'view videos',
-            'create videos',
-            'edit videos',
-            'delete videos',
-        ];
+        // Create permission and roles
+        $userHelpers->create_permissions();
 
-        foreach ($permissions as $permission) {
-            Permission::firstOrCreate(['name' => $permission]);
-        }
+        $userHelpers->create_default_professor();
+        $userHelpers->create_regular_user();
+        $userHelpers->create_video_manager_user();
+        $userHelpers->create_superadmin_user();
 
-        $roles = [
-            'regular' => ['view videos'],
-            'video-manager' => ['view videos', 'create videos', 'edit videos', 'delete videos'],
-            'super-admin' => $permissions,
-        ];
-
-        foreach ($roles as $role => $rolePermissions) {
-            $role = Role::firstOrCreate(['name' => $role]);
-            $role->syncPermissions($rolePermissions);
-        }
-    }
-}
-
-class UsersSeeder extends Seeder
-{
-    public function run()
-    {
-        $superAdmin = User::create([
-            'name' => 'Super Admin',
-            'email' => 'superadmin@videosapp.com',
-            'password' => bcrypt('123456789'),
-            'super_admin' => true,
-        ]);
-        $superAdmin->assignRole('super-admin');
-
-        $videoManager = User::create([
-            'name' => 'Video Manager',
-            'email' => 'videosmanager@videosapp.com',
-            'password' => bcrypt('123456789'),
-            'super_admin' => false,
-        ]);
-        $videoManager->assignRole('video-manager');
-
-        $regularUser = User::create([
-            'name' => 'Regular User',
-            'email' => 'regular@videosapp.com',
-            'password' => bcrypt('123456789'),
-            'super_admin' => false,
-        ]);
-        $regularUser->assignRole('regular');
+        // Create default videos
+        VideoHelper::create_default_video();
     }
 }

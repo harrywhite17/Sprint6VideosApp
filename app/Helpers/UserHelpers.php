@@ -7,37 +7,21 @@ use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 
-if (!function_exists('create_default_professor')) {
+class UserHelpers {
     function create_default_professor()
     {
         $professor = User::create([
             'name' => 'Default Professor',
             'email' => 'professor@videosapp.com',
             'password' => Hash::make('123456789'),
-            'super_admin' => false,
+            'super_admin' => true,
         ]);
-
-        add_personal_team($professor);
+        $this->add_personal_team($professor);
+        $professor->assignRole('super-admin');
 
         return $professor;
     }
-}
 
-if (!function_exists('add_personal_team')) {
-    function add_personal_team($user)
-    {
-        $team = Team::create([
-            'user_id' => $user->id,
-            'name' => $user->name . "'s Team",
-            'personal_team' => true,
-        ]);
-
-        $user->current_team_id = $team->id;
-        $user->save();
-    }
-}
-
-if (!function_exists('create_regular_user')) {
     function create_regular_user()
     {
         $user = User::create([
@@ -47,13 +31,12 @@ if (!function_exists('create_regular_user')) {
             'super_admin' => false,
         ]);
 
-        add_personal_team($user);
+        $this->add_personal_team($user);
+        $user->assignRole('regular');
 
         return $user;
     }
-}
 
-if (!function_exists('create_video_manager_user')) {
     function create_video_manager_user()
     {
         $user = User::create([
@@ -63,16 +46,12 @@ if (!function_exists('create_video_manager_user')) {
             'super_admin' => false,
         ]);
 
-        $role = Role::firstOrCreate(['name' => 'video-manager']);
-        $user->assignRole($role);
-
-        add_personal_team($user);
+        $this->add_personal_team($user);
+        $user->assignRole('video-manager');
 
         return $user;
     }
-}
 
-if (!function_exists('create_superadmin_user')) {
     function create_superadmin_user()
     {
         $user = User::create([
@@ -82,22 +61,12 @@ if (!function_exists('create_superadmin_user')) {
             'super_admin' => true,
         ]);
 
-        add_personal_team($user);
+        $this->add_personal_team($user);
+        $user->assignRole('super-admin');
 
         return $user;
     }
-}
 
-if (!function_exists('define_gates')) {
-    function define_gates()
-    {
-        Gate::define('manage-videos', function ($user) {
-            return $user->isSuperAdmin() || $user->hasRole('video-manager');
-        });
-    }
-}
-
-if (!function_exists('create_permissions')) {
     function create_permissions()
     {
         $permissions = [
@@ -119,7 +88,19 @@ if (!function_exists('create_permissions')) {
 
         foreach ($roles as $role => $rolePermissions) {
             $role = Role::firstOrCreate(['name' => $role]);
-            $role->syncPermissions($rolePermissions);
+            $role->givePermissionTo($rolePermissions);
         }
+    }
+
+    function add_personal_team($user)
+    {
+        $team = Team::create([
+            'user_id' => $user->id,
+            'name' => $user->name . "'s Team",
+            'personal_team' => true,
+        ]);
+
+        $user->current_team_id = $team->id;
+        $user->save();
     }
 }

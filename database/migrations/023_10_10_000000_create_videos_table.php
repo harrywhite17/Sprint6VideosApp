@@ -14,8 +14,8 @@ class CreateVideosTable extends Migration
             $table->text('description')->nullable();
             $table->string('url')->default(''); // Adding default value
             $table->timestamp('published_at')->nullable();
-            $table->unsignedBigInteger('previous')->nullable();
-            $table->unsignedBigInteger('next')->nullable();
+            $table->unsignedBigInteger('previous_id')->nullable();
+            $table->unsignedBigInteger('next_id')->nullable();
             $table->unsignedBigInteger('series_id')->nullable();
             $table->boolean('is_default')->default(false);
             $table->timestamps();

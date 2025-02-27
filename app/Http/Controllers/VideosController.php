@@ -4,27 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Models\Video;
 use Illuminate\Http\Request;
-use function App\Helpers\create_default_video;
+use App\Helpers\VideoHelper;
 
 class VideosController extends Controller
 {
+    public function index()
+    {
+        $videos = Video::all();
+        return view('videos.index', compact('videos'));
+    }
     public function show($id = null)
     {
         if (!$id) {
-            $videoData = create_default_video();
+            $videoData = VideoHelper::create_default_video();
         } else {
-            $video = Video::findOrFail($id);
-            $videoData = create_default_video();
+            $videoData = Video::findOrFail($id);
         }
 
         return view('videos.show', ['video' => $videoData]);
-
-        
-    }
-
-    public function manage()
-    {
-        return view('videos.manage');
     }
 
     public function testedby()

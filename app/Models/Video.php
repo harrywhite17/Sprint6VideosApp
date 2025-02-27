@@ -15,8 +15,8 @@ class Video extends Model
         'description',
         'url',
         'published_at',
-        'previous',
-        'next',
+        'previous_id',
+        'next_id',
         'series_id',
     ];
 
