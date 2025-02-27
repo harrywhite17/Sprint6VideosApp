@@ -26,11 +26,8 @@
                     </p>
                     <div class="manage-buttons">
                         <a href="{{ route('videos.manage.edit', $video['id']) }}" class="btn btn-edit">Edit</a>
-                        <form action="{{ route('videos.manage.destroy', $video['id']) }}" method="POST" style="display:inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-delete">Delete</button>
-                        </form>
+                        <a href="{{ route('videos.manage.delete', $video['id']) }}" class="btn btn-delete">Delete</a>
+                        <a href="{{ route('videos.manage.show', $video['id']) }}" class="btn btn-show">Show</a>
                     </div>
                 </div>
             </div>
@@ -106,6 +103,9 @@
         }
         .btn-delete {
             background-color: #dc3545;
+        }
+        .btn-show {
+            background-color: #007bff;
         }
     </style>
 @endsection

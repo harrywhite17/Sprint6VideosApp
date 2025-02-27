@@ -22,10 +22,15 @@
             display: flex;
             justify-content: center;
         }
-        nav a {
+        nav form {
             margin: 0 15px;
-            font-size: 16px;
+        }
+        nav button {
+            background: none;
+            border: none;
+            color: #fff;
             text-decoration: underline;
+            cursor: pointer;
         }
         main {
             padding: 20px;
@@ -61,14 +66,26 @@
 
     <!-- Navigation Bar -->
     <nav>
-        <a href="{{ route('videos.index') }}">Home</a>
-        <a href="{{ route('videos.manage.index') }}">Manage Videos</a>
-        <a href="{{ route('videos.manage.create') }}">Create Video</a>
+        <form action="{{ route('videos.index') }}" method="GET">
+            <button type="submit">Home</button>
+        </form>
+        <form action="{{ route('videos.manage.index') }}" method="GET">
+            <button type="submit">Manage Videos</button>
+        </form>
+        <form action="{{ route('videos.manage.create') }}" method="GET">
+            <button type="submit">Create Video</button>
+        </form>
+        <form action="{{ route('login') }}" method="GET">
+            <button type="submit">Login</button>
+        </form>
+        <form action="{{ route('register') }}" method="GET">
+            <button type="submit">Register</button>
+        </form>
     </nav>
 
     <!-- Main Content -->
     <main>
-        <div class="video-container">
+        <div class="video-container" style="padding-bottom: 150px;">
             @yield('content')
         </div>
     </main>

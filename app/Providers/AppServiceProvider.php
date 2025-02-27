@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Route;
+use Spatie\Permission\Middleware\RoleMiddleware;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -28,6 +30,8 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
         $this->defineGates();
+
+        Route::aliasMiddleware('role', RoleMiddleware::class);
     }
 
     /**

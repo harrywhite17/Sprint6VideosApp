@@ -18,8 +18,8 @@ class VideosManageController extends Controller
     }
     public function store(Request $request)
     {
-        $video = Video::create($request->all());
-        return response()->json($video, 201);
+        Video::create($request->all());
+        return redirect()->route('videos.index');
     }
 
     public function show($id)
@@ -31,29 +31,29 @@ class VideosManageController extends Controller
     public function edit($id)
     {
         $video = Video::findOrFail($id);
-        return response()->json($video);
+        return view('videos.manage.edit', compact('video'));
     }
 
     public function update(Request $request, $id)
     {
         $video = Video::findOrFail($id);
         $video->update($request->all());
-        return response()->json($video);
+        return redirect()->route('videos.manage.index')->with('success', 'Video Updated successfully.');
     }
 
     public function delete($id)
     {
         $video = Video::findOrFail($id);
-        $video->delete();
-        return response()->json(null, 204);
+        return view('videos.manage.delete', compact('video'));
     }
 
     public function destroy($id)
     {
         $video = Video::findOrFail($id);
         $video->delete();
-        return response()->json(null, 204);
+        return redirect()->route('videos.manage.index')->with('success', 'Video deleted successfully.');
     }
+
 
     public function testedby()
     {
