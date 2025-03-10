@@ -26,7 +26,10 @@ class Video extends Model
 
     public function getFormattedPublishedAtAttribute()
     {
-        return $this->published_at ? \Carbon\Carbon::parse($this->published_at)->format('d \d\e F \d\e Y') : null;
+        if ($this->published_at) {
+            return $this->published_at->format('d \d\e F \d\e Y');
+        }
+        return null;
     }
 
     public function getFormattedForHumansPublishedAtAttribute()
@@ -37,10 +40,5 @@ class Video extends Model
     public function getPublishedAtTimestampAttribute()
     {
         return $this->published_at ? $this->published_at->timestamp : null;
-    }
-
-    public function getPublishedAtAttribute($value)
-    {
-        return Carbon::parse($value)->format('Y-m-d H:i:s');
     }
 }

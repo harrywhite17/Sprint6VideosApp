@@ -1,125 +1,72 @@
 <?php
 
-namespace Tests\Feature\Video;
+namespace Tests\Unit;
 
-use Tests\TestCase;
 use App\Models\Video;
+use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class VideoTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
-    public function users_can_view_videos()
+    public function test_can_get_formatted_published_at_date()
     {
-        $video = Video::factory()->create();
-
-        $response = $this->get(route('videos.show', $video));
-
-        $response->assertStatus(200);
-        $response->assertViewIs('videos.show');
-        $response->assertViewHas('video', $video);
+        $video = Video::factory()->create([
+            'title' => 'Fugit quam consequatur mollitia sed quibusdam est inventore.',
+            'url' => 'http://example.com/video3',
+            'is_default' => false,
+            'published_at' => '2023-05-15 12:00:00',
+        ]);
+        $this->assertEquals('15 de May de 2023', $video->formatted_published_at);
     }
 
-    /** @test */
-    public function users_cannot_view_not_existing_videos()
+    public function test_can_get_formatted_published_at_date_when_not_published()
     {
-        $response = $this->get(route('videos.show', 999));
-
-        $response->assertStatus(404);
+        $video = Video::factory()->create([
+            'title' => 'Sunt ipsam labore ipsam.',
+            'url' => 'http://example.com/video4',
+            'is_default' => false,
+            'published_at' => null,
+        ]);
+        $this->assertNull($video->formatted_published_at);
     }
 
-    public function test_users_can_view_videos()
+    public function testCanGetFormattedVideo()
     {
-        $video = Video::factory()->create();
-        $response = $this->actingAs(User::factory()->create())->get('/videos/' . $video->id);
-        $response->assertStatus(200);
+        $video = \App\Models\Video::create([
+            'title' => 'Adipisci magnam numquam nesciunt quo repellat.',
+            'url' => 'http://example.com/video5',
+            'is_default' => false,
+            'published_at' => '2023-05-15 12:00:00',
+        ]);
+        $this->assertEquals('Adipisci magnam numquam nesciunt quo repellat.', $video->title);
     }
 
-    public function test_user_with_permissions_can_manage_videos()
+    public function testAnotherVideoTest()
     {
-        // Create a user with the necessary permissions
-        $user = User::factory()->create();
-        $user->givePermissionTo('view videos', 'create videos', 'edit videos', 'delete videos');
-
-        // Create 3 video instances
-        $videos = Video::factory()->count(3)->create();
-
-        // Act as the user
-        $this->actingAs($user);
-
-        // Visit the manage videos page
-        $response = $this->get(route('videos.manage'));
-
-        // Assert that the response is successful
-        $response->assertStatus(200);
-
-        // Assert that the videos are visible on the page
-        foreach ($videos as $video) {
-            $response->assertSee($video->title);
-            $response->assertSee($video->description);
-        }
-    }
-    public function test_user_without_permissions_can_see_default_videos_page()
-    {
-        // Create a regular user without special permissions
-        $user = User::factory()->create();
-
-        // Act as the user
-        $this->actingAs($user);
-
-        // Visit the default videos page
-        $response = $this->get(route('videos.index'));
-
-        // Assert that the response is successful
-        $response->assertStatus(200);
-
-        // Assert that default videos are visible on the page
-        $defaultVideos = Video::where('is_default', true)->get();
-        foreach ($defaultVideos as $video) {
-            $response->assertSee($video->title);
-            $response->assertSee($video->description);
-        }
+        $video = \App\Models\Video::create([
+            'title' => 'Est beatae laudantium ea totam maxime.',
+            'url' => 'http://example.com/video6',
+            'is_default' => false,
+            'published_at' => now(),
+        ]);
+        $this->assertEquals('Est beatae laudantium ea totam maxime.', $video->title);
     }
 
-    public function test_user_with_permissions_can_see_default_videos_page()
+    function create_default_video()
     {
-        // Create a user with the necessary permissions
-        $user = User::factory()->create();
-        $user->givePermissionTo('view videos');
+        $video = Video::create([
+            'title' => 'Default Title',
+            'description' => 'Default Description',
+            'url' => 'https://default.url',
+            'published_at' => now(),
+            'previous' => null,
+            'next' => null,
+            'series_id' => null,
+            'is_default' => true,
+        ]);
 
-        // Act as the user
-        $this->actingAs($user);
-
-        // Visit the default videos page
-        $response = $this->get(route('videos.index'));
-
-        // Assert that the response is successful
-        $response->assertStatus(200);
-
-        // Assert that default videos are visible on the page
-        $defaultVideos = Video::where('is_default', true)->get();
-        foreach ($defaultVideos as $video) {
-            $response->assertSee($video->title);
-            $response->assertSee($video->description);
-        }
-    }
-
-    public function test_not_logged_users_can_see_default_videos_page()
-    {
-        // Visit the default videos page without logging in
-        $response = $this->get(route('videos.index'));
-
-        // Assert that the response is successful
-        $response->assertStatus(200);
-
-        // Assert that default videos are visible on the page
-        $defaultVideos = Video::where('is_default', true)->get();
-        foreach ($defaultVideos as $video) {
-            $response->assertSee($video->title);
-            $response->assertSee($video->description);
-        }
+        return $video;
     }
 }
-

@@ -8,7 +8,27 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 
 class UserHelpers {
-    function create_default_professor()
+
+    public function run()
+    {
+        $userHelpers = new UserHelpers();
+        $userHelpers->create_permissions();
+    }
+    public function create_default_user(): User
+    {
+        $user = User::create([
+            'name' => 'userdefaults.default_user.name',
+            'email' => 'userdefaults.default_user.email',
+            'password' => Hash::make('userdefaults.default_user.password'),
+        ]);
+
+        $this->add_personal_team($user);
+        $user->assignRole('regular');
+
+        return $user;
+    }
+
+    public function create_default_professor()
     {
         $professor = User::create([
             'name' => 'Default Professor',
@@ -96,7 +116,8 @@ class UserHelpers {
     {
         $team = Team::create([
             'user_id' => $user->id,
-            'name' => $user->name . "'s Team",
+            'name' => explode(' ', $user->name,)[0] . "'s Team",
+//            'name' => $user->name . "'s Team",
             'personal_team' => true,
         ]);
 

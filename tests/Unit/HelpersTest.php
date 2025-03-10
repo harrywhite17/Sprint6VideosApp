@@ -1,12 +1,13 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit;
 
 use App\Models\Video;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Team;
+use UserHelpers;
 
 class HelpersTest extends TestCase
 {
@@ -14,7 +15,7 @@ class HelpersTest extends TestCase
 
     public function test_create_default_user()
     {
-        $user = create_default_user();
+        $user = (new UserHelpers())->create_default_user();
 
         $this->assertInstanceOf(User::class, $user);
         $this->assertEquals(config('userdefaults.default_user.name'), $user->name);
@@ -25,7 +26,7 @@ class HelpersTest extends TestCase
 
     public function test_create_default_teacher()
     {
-        $teacher = create_default_teacher();
+        $teacher = (new UserHelpers())->create_default_teacher();
 
         $this->assertInstanceOf(User::class, $teacher);
         $this->assertEquals(config('userdefaults.default_teacher.name'), $teacher->name);
@@ -49,4 +50,5 @@ class HelpersTest extends TestCase
 
         return $video;
     }
+
 }
