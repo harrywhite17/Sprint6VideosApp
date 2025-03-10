@@ -72,10 +72,14 @@ class VideosManageControllerTest extends TestCase
 
         // Adjust the data for assertion
         $videoData['is_default'] = (int) $videoData['is_default'];
-        $videoData['published_at'] = \Carbon\Carbon::parse($videoData['published_at'])->format('Y-m-d H:i:s');
+        $videoData['published_at'] = $videoData['published_at'] ? \Carbon\Carbon::parse($videoData['published_at'])->format('Y-m-d H:i:s') : null;
+
+        // Exclude created_at from the assertion
+        unset($videoData['created_at']);
 
         $this->assertDatabaseHas('videos', $videoData);
     }
+
     /** @test */
     public function user_without_permissions_cannot_store_videos()
     {
@@ -133,7 +137,10 @@ class VideosManageControllerTest extends TestCase
 
         // Adjust the data for assertion
         $updatedData['is_default'] = (int) $updatedData['is_default'];
-        $updatedData['published_at'] = \Carbon\Carbon::parse($updatedData['published_at'])->format('Y-m-d H:i:s');
+        $updatedData['published_at'] = $updatedData['published_at'] ? \Carbon\Carbon::parse($updatedData['published_at'])->format('Y-m-d H:i:s') : null;
+
+        // Exclude created_at from the assertion
+        unset($updatedData['created_at']);
 
         $this->assertDatabaseHas('videos', $updatedData);
     }

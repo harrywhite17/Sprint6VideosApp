@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Video;
 use Illuminate\Http\Request;
 use App\Helpers\VideoHelper;
+use Tests\Feature\Video\VideoTest;
 
 class VideosController extends Controller
 {
@@ -13,6 +14,7 @@ class VideosController extends Controller
         $videos = Video::all();
         return view('videos.index', compact('videos'));
     }
+
     public function show($id = null)
     {
         if (!$id) {
@@ -26,6 +28,6 @@ class VideosController extends Controller
 
     public function testedby()
     {
-        return \Tests\Feature\Video\VideoTest::class;
+        return VideoTest::class;
     }
 }

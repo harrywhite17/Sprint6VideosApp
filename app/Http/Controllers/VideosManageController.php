@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Video;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class VideosManageController extends Controller
 {
@@ -20,6 +21,9 @@ class VideosManageController extends Controller
 
     public function store(Request $request)
     {
+        $data = $request->all();
+        $data['user_id'] = Auth::id();
+
         Video::create($request->all());
         return redirect()->route('videos.manage.index')->with('success', 'Video created successfully.');
     }

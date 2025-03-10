@@ -50,5 +50,4 @@ class HelpersTest extends TestCase
 
         return $video;
     }
-
 }

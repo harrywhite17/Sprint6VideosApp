@@ -75,6 +75,13 @@
         <form action="{{ route('videos.manage.create') }}" method="GET">
             <button type="submit">Create Video</button>
         </form>
+        <form action="{{ route('users.manage.index') }}" method="GET">
+            <button type="submit">Manage Users</button>
+        </form>
+        <form action="{{ route('users.manage.create') }}" method="GET">
+            <button type="submit">Create User</button>
+        </form>
+
         <form action="{{ route('login') }}" method="GET">
             <button type="submit">Login</button>
         </form>

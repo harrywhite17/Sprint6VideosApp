@@ -12,6 +12,7 @@ class Video extends Model
 
     protected $fillable = [
         'title',
+        'user_id',
         'description',
         'url',
         'published_at',
@@ -19,7 +20,10 @@ class Video extends Model
         'next_id',
         'series_id',
     ];
-
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
     protected $casts = [
         'published_at' => 'datetime',
     ];

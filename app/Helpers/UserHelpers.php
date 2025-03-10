@@ -2,126 +2,84 @@
 
 use App\Models\User;
 use App\Models\Team;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class UserHelpers {
 
-    public function run()
-    {
-        $userHelpers = new UserHelpers();
-        $userHelpers->create_permissions();
-    }
-    public function create_default_user(): User
+    public function create_default_user()
     {
         $user = User::create([
-            'name' => 'userdefaults.default_user.name',
-            'email' => 'userdefaults.default_user.email',
-            'password' => Hash::make('userdefaults.default_user.password'),
+            'name' => config('userdefaults.default_user.name'),
+            'email' => config('userdefaults.default_user.email'),
+            'password' => Hash::make(config('userdefaults.default_user.password')),
         ]);
 
-        $this->add_personal_team($user);
-        $user->assignRole('regular');
+        $team = Team::create([
+            'name' => $user->name . "'s Team",
+            'user_id' => $user->id, // Ensure user_id is set
+            'personal_team' => true,
+        ]);
+
+        $user->currentTeam()->associate($team);
+        $user->save();
 
         return $user;
     }
 
-    public function create_default_professor()
+    public function create_default_teacher()
     {
-        $professor = User::create([
-            'name' => 'Default Professor',
-            'email' => 'professor@videosapp.com',
-            'password' => Hash::make('123456789'),
-            'super_admin' => true,
-        ]);
-        $this->add_personal_team($professor);
-        $professor->assignRole('super-admin');
-
-        return $professor;
-    }
-
-    function create_regular_user()
-    {
-        $user = User::create([
-            'name' => 'Regular User',
-            'email' => 'regular@videosapp.com',
-            'password' => Hash::make('123456789'),
-            'super_admin' => false,
+        $teacher = User::create([
+            'name' => config('userdefaults.default_teacher.name'),
+            'email' => config('userdefaults.default_teacher.email'),
+            'password' => Hash::make(config('userdefaults.default_teacher.password')),
         ]);
 
-        $this->add_personal_team($user);
-        $user->assignRole('regular');
-
-        return $user;
-    }
-
-    function create_video_manager_user()
-    {
-        $user = User::create([
-            'name' => 'Video Manager',
-            'email' => 'videosmanager@videosapp.com',
-            'password' => Hash::make('123456789'),
-            'super_admin' => false,
+        $team = Team::create([
+            'name' => $teacher->name . "'s Team",
+            'user_id' => $teacher->id, // Ensure user_id is set
+            'personal_team' => true,
         ]);
 
-        $this->add_personal_team($user);
-        $user->assignRole('video-manager');
+        $teacher->currentTeam()->associate($team);
+        $teacher->save();
 
-        return $user;
+        return $teacher;
     }
 
-    function create_superadmin_user()
+    public static function createPermissionsAndAssignToSuperAdmin()
     {
-        $user = User::create([
-            'name' => 'Super Admin',
-            'email' => 'superadmin@videosapp.com',
-            'password' => Hash::make('123456789'),
-            'super_admin' => true,
-        ]);
-
-        $this->add_personal_team($user);
-        $user->assignRole('super-admin');
-
-        return $user;
-    }
-
-    function create_permissions()
-    {
-        $permissions = [
+        // Define permissions
+        $videoPermissions = [
             'view videos',
             'create videos',
             'edit videos',
             'delete videos',
         ];
 
-        foreach ($permissions as $permission) {
+        $userPermissions = [
+            'view users',
+            'create users',
+            'edit users',
+            'delete users',
+        ];
+
+        // Create permissions if they don't exist
+        foreach (array_merge($videoPermissions, $userPermissions) as $permission) {
             Permission::firstOrCreate(['name' => $permission]);
         }
 
+        // Define roles
         $roles = [
-            'regular' => ['view videos'],
-            'video-manager' => ['view videos', 'create videos', 'edit videos', 'delete videos'],
-            'super-admin' => $permissions,
+            'video-manager' => $videoPermissions, // video-manager has all video permissions
+            'super-admin' => Permission::pluck('name')->toArray(), // super-admin has all permissions
         ];
 
-        foreach ($roles as $role => $rolePermissions) {
-            $role = Role::firstOrCreate(['name' => $role]);
-            $role->givePermissionTo($rolePermissions);
+        // Create roles and assign permissions
+        foreach ($roles as $roleName => $rolePermissions) {
+            $role = Role::firstOrCreate(['name' => $roleName]);
+            $role->syncPermissions($rolePermissions);
         }
-    }
-
-    function add_personal_team($user)
-    {
-        $team = Team::create([
-            'user_id' => $user->id,
-            'name' => explode(' ', $user->name,)[0] . "'s Team",
-//            'name' => $user->name . "'s Team",
-            'personal_team' => true,
-        ]);
-
-        $user->current_team_id = $team->id;
-        $user->save();
     }
 }
