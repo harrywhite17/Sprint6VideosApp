@@ -134,3 +134,51 @@ Durant el cinquè sprint, hem realitzat les següents tasques:
 - S’ha de poder navegar entre pàgines.
 - Afegir a `resources/markdown/terms` el que heu fet al sprint.
 - Comprovar en Larastan tots els fitxers que heu creat.
+
+## Sprint 6
+Durant el sisè sprint, hem realitzat les següents tasques:
+- Corregir els errors del 5è sprint.
+- En cas que al modificar el codi falla algun test d’un sprint anterior, s’han arreglat.
+- Modificar vídeos per poder assignar el vídeo a les sèries.
+- Permetre als usuaris regulars crear vídeos. Per tant, s’han afegit les funcions del CRUD per als usuaris regulars al `VideoController`. A la vista de vídeos s’han creat els botons per al CRUD.
+- Crear la migració de sèries amb els camps: `id`, `title`, `description`, `image` (nullable), `user_name`, `user_photo_url` (nullable), `published_at` (nullable).
+- Crear el model de sèries amb les funcions `testedBy`, `videos` (per fer la relació 1:N), `getFormattedCreatedAtAttribute`, `getFormattedForHumansCreatedAtAttribute`, `getCreatedAtTimestampAttribute`.
+- Afegir la relació 1:N al model de vídeos per connectar-lo amb les sèries.
+- Crear el `SeriesManageController` amb les funcions `testedBy`, `index`, `store`, `edit`, `update`, `delete` i `destroy`.
+- Crear el `SeriesController` amb les funcions `index` i `show`.
+- A `helpers`, crear la funció `create_series()` per generar 3 sèries per defecte.
+- Crear les vistes per al CRUD de sèries que només poden veure els usuaris amb els permisos adients:
+  - `resources/views/series/manage/index.blade.php`
+  - `resources/views/series/manage/create.blade.php`
+  - `resources/views/series/manage/edit.blade.php`
+  - `resources/views/series/manage/delete.blade.php`
+- A la vista `index.blade.php`, afegir la taula del CRUD de sèries.
+- A la vista `create.blade.php`, afegir el formulari per crear sèries, utilitzant l’atribut `data-qa` per facilitar la identificació als tests.
+- A la vista `edit.blade.php`, afegir la taula del CRUD de sèries.
+- A la vista `delete.blade.php`, afegir la confirmació de l’eliminació de les sèries i els vídeos associats a la sèrie. (Si no es vol esborrar els vídeos, es pot fer que es desassigni la relació).
+- Crear la vista `resources/views/series/index.blade.php` on es vegin totes les sèries, es puguin buscar i, en clicar a una sèrie, es mostrin els vídeos que té aquella sèrie.
+- A `helpers`, crear els permisos de gestió de les sèries per al CRUD i assignar-los als usuaris superadmin.
+- A `tests/Unit/SerieTest`, crear la funció `serie_have_videos()`.
+- A `SeriesManageControllerTest`, crear les funcions:
+  - `loginAsVideoManager`
+  - `loginAsSuperAdmin`
+  - `loginAsRegularUser`
+  - `user_with_permissions_can_see_add_series`
+  - `user_without_series_manage_create_cannot_see_add_series`
+  - `user_with_permissions_can_store_series`
+  - `user_without_permissions_cannot_store_series`
+  - `user_with_permissions_can_destroy_series`
+  - `user_without_permissions_cannot_destroy_series`
+  - `user_with_permissions_can_see_edit_series`
+  - `user_without_permissions_cannot_see_edit_series`
+  - `user_with_permissions_can_update_series`
+  - `user_without_permissions_cannot_update_series`
+  - `user_with_permissions_can_manage_series`
+  - `regular_users_cannot_manage_series`
+  - `guest_users_cannot_manage_series`
+  - `videomanagers_can_manage_series`
+  - `superadmins_can_manage_series`
+- Crear les rutes de `series/manage` per al CRUD de les sèries amb el seu middleware corresponent i la ruta de l’índex i el `show` de sèries. Les rutes del CRUD i les de l’índex i `show` només apareixen quan estàs logejat.
+- S’ha afegit navegació entre pàgines.
+- Afegir a `resources/markdown/terms` el que s’ha fet al sprint.
+- Comprovar en Larastan tots els fitxers que s’han creat.

@@ -21,13 +21,16 @@ class SeriesManageController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required',
-            'description' => 'required',
-            'image' => 'required',
-            'user_name' => 'required',
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'user_name' => 'required|string|max:255',
         ]);
 
-        Series::create($request->all());
+        $series = new Series();
+        $series->title = $request->input('title');
+        $series->description = $request->input('description');
+        $series->user_name = $request->input('user_name');
+        $series->save();
 
         return redirect()->route('series.manage.index')->with('success', 'Series created successfully.');
     }
@@ -63,5 +66,10 @@ class SeriesManageController extends Controller
         $serie->delete();
 
         return redirect()->route('series.manage.index')->with('success', 'Series deleted successfully.');
+    }
+    public function delete($id)
+    {
+        $serie = Series::findOrFail($id); // Correct variable name
+        return view('series.manage.delete', compact('serie')); // Pass as $serie
     }
 }

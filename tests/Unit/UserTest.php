@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class UserTest extends TestCase
 {
@@ -16,7 +17,9 @@ class UserTest extends TestCase
     {
         parent::setUp();
 
-        // Create permissions
+        // Create roles and permissions
+        Role::firstOrCreate(['name' => 'user-manager']);
+        Role::firstOrCreate(['name' => 'super-admin']);
         Permission::firstOrCreate(['name' => 'view users']);
         Permission::firstOrCreate(['name' => 'create users']);
         Permission::firstOrCreate(['name' => 'edit users']);
@@ -35,44 +38,48 @@ class UserTest extends TestCase
     public function testUserWithoutPermissionsCanSeeDefaultUsersPage()
     {
         $user = User::factory()->create();
+        $user->assignRole('user-manager'); // Assign the required role
         Auth::login($user);
 
-        $response = $this->get(route('users.index'));
+        $response = $this->get(route('users.manage.index'));
         $response->assertStatus(200);
     }
 
     public function testUserWithPermissionsCanSeeDefaultUsersPage()
     {
         $user = User::factory()->create();
-        $user->givePermissionTo('view users');
+        $user->assignRole('user-manager'); // Assign the required role
+        $user->givePermissionTo('view users'); // Assign the required permission
         Auth::login($user);
 
-        $response = $this->get(route('users.index'));
+        $response = $this->get(route('users.manage.index'));
         $response->assertStatus(200);
     }
 
     public function testNotLoggedUsersCannotSeeDefaultUsersPage()
     {
-        $response = $this->get(route('users.index'));
+        $response = $this->get(route('users.manage.index'));
         $response->assertRedirect(route('login'));
     }
 
     public function testUserWithoutPermissionsCanSeeUserShowPage()
     {
         $user = User::factory()->create();
+        $user->assignRole('user-manager'); // Assign the required role
         Auth::login($user);
 
-        $response = $this->get(route('users.show', ['user' => $user->id]));
+        $response = $this->get(route('users.manage.show', ['user' => $user->id]));
         $response->assertStatus(200);
     }
 
     public function testUserWithPermissionsCanSeeUserShowPage()
     {
         $user = User::factory()->create();
-        $user->givePermissionTo('view users');
+        $user->assignRole('user-manager'); // Assign the required role
+        $user->givePermissionTo('view users'); // Assign the required permission
         Auth::login($user);
 
-        $response = $this->get(route('users.show', ['user' => $user->id]));
+        $response = $this->get(route('users.manage.show', ['user' => $user->id]));
         $response->assertStatus(200);
     }
 
@@ -80,7 +87,7 @@ class UserTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $response = $this->get(route('users.show', ['user' => $user->id]));
+        $response = $this->get(route('users.manage.show', ['user' => $user->id]));
         $response->assertRedirect(route('login'));
     }
 }

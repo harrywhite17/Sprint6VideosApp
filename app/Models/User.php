@@ -10,6 +10,7 @@ use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use App\Models\Video;
 
 class User extends Authenticatable
 {
@@ -22,11 +23,6 @@ class User extends Authenticatable
         'super_admin',
     ];
 
-
-    public function multimedia()
-    {
-        return $this->hasMany(Multimedia::class);
-    }
     protected $hidden = [
         'password',
         'remember_token',
@@ -44,6 +40,11 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function multimedia()
+    {
+        return $this->hasMany(Multimedia::class);
     }
 
     public function videos()

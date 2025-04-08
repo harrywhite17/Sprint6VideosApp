@@ -51,11 +51,11 @@ Route::middleware(['auth', 'verified', 'role:video-manager|super-admin'])->group
     Route::prefix('series/manage')->group(function () {
         Route::get('/', [SeriesManageController::class, 'index'])->name('series.manage.index');
         Route::get('/create', [SeriesManageController::class, 'create'])->name('series.create');
-        Route::post('/', [SeriesManageController::class, 'store'])->name('series.manage.store');
+        Route::post('/', [SeriesManageController::class, 'store'])->name('series.store');
         Route::get('/{series}/edit', [SeriesManageController::class, 'edit'])->name('series.edit');
         Route::put('/{series}', [SeriesManageController::class, 'update'])->name('series.update'); // Added route
-        Route::delete('/{series}', [SeriesManageController::class, 'destroy'])->name('series.delete');
-    });
+        Route::delete('/{series}', [SeriesManageController::class, 'destroy'])->name('series.manage.destroy');
+        Route::get('/series/manage/{series}/delete', [SeriesManageController::class, 'delete'])->name('series.delete');    });
 });
 
 // Public series routes

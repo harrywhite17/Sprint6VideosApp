@@ -19,6 +19,7 @@ class Video extends Model
         'previous_id',
         'next_id',
         'series_id',
+        'is_default',
     ];
 
     public function user()
@@ -33,6 +34,7 @@ class Video extends Model
 
     protected $casts = [
         'published_at' => 'datetime',
+        'is_default' => 'boolean',
     ];
 
     public function getFormattedPublishedAtAttribute()

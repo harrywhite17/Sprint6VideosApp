@@ -17,7 +17,7 @@
 
             <div class="form-group">
                 <label for="user_name" data-qa="label-user_name">User Name:</label>
-                <input type="text" id="user_name" name="user_name" required data-qa="input-user_name" class="form-control">
+                <input type="text" id="user_name" name="user_name" value="{{ Auth::user()->name }}" readonly required data-qa="input-user_name" class="form-control">
             </div>
 
             <button type="submit" data-qa="button-submit" class="btn btn-primary">Create</button>

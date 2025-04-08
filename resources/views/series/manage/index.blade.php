@@ -3,7 +3,7 @@
 @section('content')
     @can('view series')
         <h1>Manage Series</h1>
-        <a href="{{ route('series.create') }}" class="btn btn-primary">Create New Series</a>
+        <a href="{{ route('series.create') }}" class="btn btn-primary">Create New Series</a> <!-- Link to the create form -->
         <table class="table table-striped">
             <thead>
             <tr>
@@ -54,6 +54,18 @@
         }
         .btn-show {
             background-color: #007bff;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            padding: 10px 20px;
+            color: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
         }
         .table {
             width: 100%;

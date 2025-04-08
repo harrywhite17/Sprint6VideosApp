@@ -21,12 +21,24 @@
             padding: 10px 20px;
             display: flex;
             justify-content: center;
+            align-items: center;
         }
         nav a {
             margin: 0 15px;
             color: #fff;
             text-decoration: underline;
             cursor: pointer;
+        }
+        nav form {
+            margin: 0;
+        }
+        nav button {
+            background: none;
+            border: none;
+            color: #fff;
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 16px;
         }
         main {
             padding: 20px;
@@ -69,8 +81,16 @@
         <a href="{{ route('users.manage.create') }}">Create User</a>
         <a href="{{ route('series.index') }}">All Series</a>
         <a href="{{ route('series.manage.index') }}">Manage Series</a>
-        <a href="{{ route('login') }}">Login</a>
-        <a href="{{ route('register') }}">Register</a>
+        @auth
+            <span>Welcome, {{ Auth::user()->name }}</span>
+            <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                @csrf
+                <button type="submit">Logout</button>
+            </form>
+        @else
+            <a href="{{ route('login') }}">Login</a>
+            <a href="{{ route('register') }}">Register</a>
+        @endauth
     </nav>
 
     <!-- Main Content -->

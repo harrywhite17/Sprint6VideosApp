@@ -10,7 +10,7 @@
             <img src="{{ $serie->image ?? 'default-thumbnail.jpg' }}" alt="Series Thumbnail" class="video-thumbnail">
             <p class="video-meta"><strong>Published At:</strong> {{ $serie->published_at }}</p>
         </div>
-        <form action="{{ route('series.destroy', $serie->id) }}" method="POST" data-qa="form-delete-series" class="create-series-form">
+        <form action="{{ route('series.manage.destroy', $serie->id) }}" method="POST" data-qa="form-delete-series" class="create-series-form">
             @csrf
             @method('DELETE')
             <div class="form-group">
