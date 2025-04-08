@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Video;
 
-use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Video;
@@ -21,20 +20,15 @@ class VideosManageControllerTest extends TestCase
     private function loginAsVideoManager()
     {
         $user = User::factory()->create();
-        $permissions = ['view videos', 'create videos', 'edit videos', 'delete videos'];
-        foreach ($permissions as $permission) {
-            Permission::firstOrCreate(['name' => $permission]);
-        }
-        $user->givePermissionTo($permissions);
-        $user->assignRole('video-manager');
+        $user->assignRole('video-manager'); // Permissions are already seeded
         $this->actingAs($user);
         return $user;
     }
 
     private function loginAsSuperAdmin()
     {
-        $user = User::factory()->create(['super_admin' => true]);
-        $user->assignRole('super-admin');
+        $user = User::factory()->create();
+        $user->assignRole('super-admin'); // Permissions are already seeded
         $this->actingAs($user);
         return $user;
     }
@@ -70,11 +64,8 @@ class VideosManageControllerTest extends TestCase
         $response = $this->post(route('videos.manage.store'), $videoData);
         $response->assertStatus(302);
 
-        // Adjust the data for assertion
         $videoData['is_default'] = (int) $videoData['is_default'];
         $videoData['published_at'] = $videoData['published_at'] ? \Carbon\Carbon::parse($videoData['published_at'])->format('Y-m-d H:i:s') : null;
-
-        // Exclude created_at from the assertion
         unset($videoData['created_at']);
 
         $this->assertDatabaseHas('videos', $videoData);
@@ -135,11 +126,8 @@ class VideosManageControllerTest extends TestCase
         $response = $this->put(route('videos.manage.update', $video), $updatedData);
         $response->assertStatus(302);
 
-        // Adjust the data for assertion
         $updatedData['is_default'] = (int) $updatedData['is_default'];
         $updatedData['published_at'] = $updatedData['published_at'] ? \Carbon\Carbon::parse($updatedData['published_at'])->format('Y-m-d H:i:s') : null;
-
-        // Exclude created_at from the assertion
         unset($updatedData['created_at']);
 
         $this->assertDatabaseHas('videos', $updatedData);

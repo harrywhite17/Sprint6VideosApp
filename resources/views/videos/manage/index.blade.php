@@ -12,22 +12,26 @@
                 $thumbnailUrl = $videoId ? "https://img.youtube.com/vi/{$videoId}/hqdefault.jpg" : 'default-thumbnail.jpg';
             @endphp
             <div class="video-item">
-                <a href="{{ route('videos.manage.show', $video['id']) }}" class="thumbnail-link">
+                <a href="{{ route('videos.manage.show', ['video' => $video['id']]) }}" class="thumbnail-link">
                     <div class="thumbnail-container">
                         <img src="{{ $thumbnailUrl }}" alt="{{ $video['title'] }}">
                     </div>
                 </a>
                 <div class="video-details">
-                    <a href="{{ route('videos.manage.show', $video['id']) }}">
+                    <a href="{{ route('videos.manage.show', ['video' => $video['id']]) }}">
                         <h3>{{ Str::limit($video['title'], 60) }}</h3>
                     </a>
                     <p class="video-meta">
                         {{ $video['description'] ? Str::limit($video['description'], 100) : 'No description' }}
                     </p>
                     <div class="manage-buttons">
-                        <a href="{{ route('videos.manage.edit', $video['id']) }}" class="btn btn-edit">Edit</a>
-                        <a href="{{ route('videos.manage.delete', $video['id']) }}" class="btn btn-delete">Delete</a>
-                        <a href="{{ route('videos.manage.show', $video['id']) }}" class="btn btn-show">Show</a>
+                        <a href="{{ route('videos.manage.edit', ['video' => $video['id']]) }}" class="btn btn-edit">Edit</a>
+                        <form action="{{ route('videos.manage.destroy', ['video' => $video['id']]) }}" method="POST" style="display: inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-delete" onclick="return confirm('Are you sure you want to delete this video?')">Delete</button>
+                        </form>
+                        <a href="{{ route('videos.manage.show', ['video' => $video['id']]) }}" class="btn btn-show">Show</a>
                     </div>
                 </div>
             </div>

@@ -7,7 +7,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Team;
-use UserHelpers;
+use App\Helpers\UserHelpers;
 
 class HelpersTest extends TestCase
 {
@@ -18,9 +18,9 @@ class HelpersTest extends TestCase
         $user = (new UserHelpers())->create_default_user();
 
         $this->assertInstanceOf(User::class, $user);
-        $this->assertEquals(config('userdefaults.default_user.name'), $user->name);
-        $this->assertEquals(config('userdefaults.default_user.email'), $user->email);
-        $this->assertTrue(\Hash::check(config('userdefaults.default_user.password'), $user->password));
+        $this->assertEquals(config('userdefaults.default_user.name', 'Default User'), $user->name);
+        $this->assertEquals(config('userdefaults.default_user.email', 'default@example.com'), $user->email);
+        $this->assertTrue(\Hash::check(config('userdefaults.default_user.password', 'password'), $user->password));
         $this->assertInstanceOf(Team::class, $user->currentTeam);
     }
 
@@ -29,25 +29,41 @@ class HelpersTest extends TestCase
         $teacher = (new UserHelpers())->create_default_teacher();
 
         $this->assertInstanceOf(User::class, $teacher);
-        $this->assertEquals(config('userdefaults.default_teacher.name'), $teacher->name);
-        $this->assertEquals(config('userdefaults.default_teacher.email'), $teacher->email);
-        $this->assertTrue(\Hash::check(config('userdefaults.default_teacher.password'), $teacher->password));
+        $this->assertEquals(config('userdefaults.default_teacher.name', 'Default Teacher'), $teacher->name);
+        $this->assertEquals(config('userdefaults.default_teacher.email', 'teacher@example.com'), $teacher->email);
+        $this->assertTrue(\Hash::check(config('userdefaults.default_teacher.password', 'password'), $teacher->password));
         $this->assertInstanceOf(Team::class, $teacher->currentTeam);
     }
 
-    function create_default_video()
+    /** @test */
+    public function test_create_default_video()
+    {
+        // Create a user first to get a valid user_id
+        $user = (new UserHelpers())->create_default_user();
+
+        // Pass the user_id to create_default_video
+        $video = $this->create_default_video($user->id);
+
+        $this->assertInstanceOf(Video::class, $video);
+        $this->assertEquals('Default Title', $video->title);
+        $this->assertEquals('Default Description', $video->description);
+        $this->assertEquals('https://default.url', $video->url);
+        $this->assertTrue((bool) $video->is_default, "Expected is_default to be true, got {$video->is_default}");
+        $this->assertEquals($user->id, $video->user_id); // Verify user_id was set
+    }
+
+    private function create_default_video($userId)
     {
         $video = Video::create([
             'title' => 'Default Title',
             'description' => 'Default Description',
             'url' => 'https://default.url',
             'published_at' => now(),
-            'previous' => null,
-            'next' => null,
-            'series_id' => null,
             'is_default' => true,
+            'user_id' => $userId,
         ]);
 
+        logger()->info('Video is_default after save: ' . json_encode($video->is_default));
         return $video;
     }
 }

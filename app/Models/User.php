@@ -22,6 +22,11 @@ class User extends Authenticatable
         'super_admin',
     ];
 
+
+    public function multimedia()
+    {
+        return $this->hasMany(Multimedia::class);
+    }
     protected $hidden = [
         'password',
         'remember_token',

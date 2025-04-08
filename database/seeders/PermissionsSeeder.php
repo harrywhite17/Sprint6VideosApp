@@ -3,12 +3,13 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use UserHelpers;
+use App\Helpers\UserHelpers;
 
 class PermissionsSeeder extends Seeder
 {
     public function run()
     {
-        UserHelpers::createPermissionsAndAssignToSuperAdmin();
+        $userHelpers = new UserHelpers();
+        $userHelpers->create_permissions();
     }
 }

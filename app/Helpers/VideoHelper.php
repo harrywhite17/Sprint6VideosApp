@@ -7,9 +7,8 @@ use Illuminate\Support\Collection;
 
 class VideoHelper {
 
-    public static function create_default_video(): Collection
+    public static function create_default_video(int $userId): Collection
     {
-
         $existingVideos = Video::all();
         if ($existingVideos->isNotEmpty()) {
             return $existingVideos;
@@ -24,6 +23,7 @@ class VideoHelper {
             'next_id' => null,
             'series_id' => null,
             'is_default' => true,
+            'user_id' => $userId, // Add this
         ]);
 
         $video2 = Video::create([
@@ -35,6 +35,7 @@ class VideoHelper {
             'next_id' => null,
             'series_id' => null,
             'is_default' => true,
+            'user_id' => $userId, // Add this
         ]);
 
         $video3 = Video::create([
@@ -46,6 +47,7 @@ class VideoHelper {
             'next_id' => null,
             'series_id' => null,
             'is_default' => true,
+            'user_id' => $userId, // Add this
         ]);
 
         $video1->update(['next_id' => $video2->id]);
@@ -54,5 +56,4 @@ class VideoHelper {
 
         return collect([$video1, $video2, $video3]);
     }
-
 }

@@ -20,10 +20,17 @@ class Video extends Model
         'next_id',
         'series_id',
     ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
     }
+
+    public function series()
+    {
+        return $this->belongsTo(Series::class);
+    }
+
     protected $casts = [
         'published_at' => 'datetime',
     ];

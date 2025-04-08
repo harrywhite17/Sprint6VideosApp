@@ -22,12 +22,8 @@
             display: flex;
             justify-content: center;
         }
-        nav form {
+        nav a {
             margin: 0 15px;
-        }
-        nav button {
-            background: none;
-            border: none;
             color: #fff;
             text-decoration: underline;
             cursor: pointer;
@@ -66,28 +62,15 @@
 
     <!-- Navigation Bar -->
     <nav>
-        <form action="{{ route('videos.index') }}" method="GET">
-            <button type="submit">Home</button>
-        </form>
-        <form action="{{ route('videos.manage.index') }}" method="GET">
-            <button type="submit">Manage Videos</button>
-        </form>
-        <form action="{{ route('videos.manage.create') }}" method="GET">
-            <button type="submit">Create Video</button>
-        </form>
-        <form action="{{ route('users.manage.index') }}" method="GET">
-            <button type="submit">Manage Users</button>
-        </form>
-        <form action="{{ route('users.manage.create') }}" method="GET">
-            <button type="submit">Create User</button>
-        </form>
-
-        <form action="{{ route('login') }}" method="GET">
-            <button type="submit">Login</button>
-        </form>
-        <form action="{{ route('register') }}" method="GET">
-            <button type="submit">Register</button>
-        </form>
+        <a href="{{ route('videos.index') }}">Home</a>
+        <a href="{{ route('videos.manage.index') }}">Manage Videos</a>
+        <a href="{{ route('videos.manage.create') }}">Create Video</a>
+        <a href="{{ route('users.manage.index') }}">Manage Users</a>
+        <a href="{{ route('users.manage.create') }}">Create User</a>
+        <a href="{{ route('series.index') }}">All Series</a>
+        <a href="{{ route('series.manage.index') }}">Manage Series</a>
+        <a href="{{ route('login') }}">Login</a>
+        <a href="{{ route('register') }}">Register</a>
     </nav>
 
     <!-- Main Content -->

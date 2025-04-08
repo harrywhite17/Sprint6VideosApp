@@ -3,33 +3,37 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\User;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
+use App\Helpers\UserHelpers;
+use App\Models\Series;
 use App\Helpers\VideoHelper;
-use UserHelpers;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     *
-     * @return void
-     */
     public function run()
     {
-        // Create users
+        $this->call([
+            SeriesPermissionsSeeder::class,
+        ]);
+
         $userHelpers = new UserHelpers();
 
-        // Create permission and roles
         $userHelpers->create_permissions();
 
         $userHelpers->create_default_professor();
         $userHelpers->create_regular_user();
         $userHelpers->create_video_manager_user();
-        $userHelpers->create_superadmin_user();
+        $superadmin = $userHelpers->create_superadmin_user(); // Assuming this returns a User model
 
-        // Create default videos
-        VideoHelper::create_default_video();
+        $series = Series::create([
+            'title' => 'Default Series',
+            'description' => 'This is a default series.',
+            'user_name' => 'system',
+        ]);
+
+        $videos = VideoHelper::create_default_video($superadmin->id); // Pass superadmin's ID
+        foreach ($videos as $video) {
+            $video->series()->associate($series);
+            $video->save();
+        }
     }
 }

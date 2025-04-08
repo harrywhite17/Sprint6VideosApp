@@ -1,7 +1,7 @@
 @extends('layouts.videos-app-layout')
 
 @section('content')
-    <h1>All Videos</h1>
+    <h1>Videos</h1>
     <div class="video-grid">
         @foreach($videos as $video)
             @php
@@ -12,13 +12,13 @@
                 $thumbnailUrl = $videoId ? "https://img.youtube.com/vi/{$videoId}/hqdefault.jpg" : 'default-thumbnail.jpg';
             @endphp
             <div class="video-item">
-                <a href="{{ route('videos.show', $video['id']) }}" class="thumbnail-link">
+                <a href="{{ route('videos.show', ['id' => $video['id']]) }}" class="thumbnail-link">
                     <div class="thumbnail-container">
                         <img src="{{ $thumbnailUrl }}" alt="{{ $video['title'] }}">
                     </div>
                 </a>
                 <div class="video-details">
-                    <a href="{{ route('videos.show', $video['id']) }}">
+                    <a href="{{ route('videos.show', ['id' => $video['id']]) }}">
                         <h3>{{ Str::limit($video['title'], 60) }}</h3>
                     </a>
                     <p class="video-meta">

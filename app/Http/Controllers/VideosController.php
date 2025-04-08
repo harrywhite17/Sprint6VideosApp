@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Video;
 use Illuminate\Http\Request;
-use App\Helpers\VideoHelper;
-use Tests\Feature\Video\VideoTest;
 
 class VideosController extends Controller
 {
@@ -14,20 +12,51 @@ class VideosController extends Controller
         $videos = Video::all();
         return view('videos.index', compact('videos'));
     }
-
-    public function show($id = null)
+    public function show($id)
     {
-        if (!$id) {
-            $videoData = VideoHelper::create_default_video();
-        } else {
-            $videoData = Video::findOrFail($id);
-        }
-
-        return view('videos.show', ['video' => $videoData]);
+        $video = Video::findOrFail($id); // Retrieve the video or throw a 404 error if not found
+        return view('videos.show', compact('video')); // Pass the video to the 'videos.show' view
+    }
+    public function create()
+    {
+        return view('videos.create');
     }
 
-    public function testedby()
+    public function store(Request $request)
     {
-        return VideoTest::class;
+        $request->validate([
+            'title' => 'required',
+            'description' => 'required',
+            'url' => 'required|url',
+        ]);
+
+        Video::create($request->all());
+
+        return redirect()->route('videos.index')->with('success', 'Video created successfully.');
+    }
+
+    public function edit(Video $video)
+    {
+        return view('videos.edit', compact('video'));
+    }
+
+    public function update(Request $request, Video $video)
+    {
+        $request->validate([
+            'title' => 'required',
+            'description' => 'required',
+            'url' => 'required|url',
+        ]);
+
+        $video->update($request->all());
+
+        return redirect()->route('videos.index')->with('success', 'Video updated successfully.');
+    }
+
+    public function destroy(Video $video)
+    {
+        $video->delete();
+
+        return redirect()->route('videos.index')->with('success', 'Video deleted successfully.');
     }
 }
