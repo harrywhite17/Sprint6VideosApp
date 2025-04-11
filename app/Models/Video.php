@@ -18,7 +18,6 @@ class Video extends Model
         'published_at',
         'previous_id',
         'next_id',
-        'series_id',
         'is_default',
     ];
 
@@ -29,7 +28,7 @@ class Video extends Model
 
     public function series()
     {
-        return $this->belongsTo(Series::class);
+        return $this->belongsToMany(Series::class, 'series_video', 'video_id', 'series_id');
     }
 
     protected $casts = [

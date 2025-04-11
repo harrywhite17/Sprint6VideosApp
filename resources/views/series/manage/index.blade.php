@@ -24,7 +24,11 @@
                     <td>
                         <a href="{{ route('series.show', $serie->id) }}" class="btn btn-show">Show</a>
                         <a href="{{ route('series.edit', $serie->id) }}" class="btn btn-edit">Edit</a>
-                        <a href="{{ route('series.delete', $serie->id) }}" class="btn btn-delete">Delete</a>
+                        <form action="{{ route('series.manage.destroy', $serie->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this series?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-delete">Delete</button>
+                        </form>
                     </td>
                 </tr>
             @endforeach

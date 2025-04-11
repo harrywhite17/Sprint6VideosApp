@@ -11,13 +11,14 @@ class CreateVideosTable extends Migration
         Schema::create('videos', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->text('description')->nullable();
-            $table->string('url')->default(''); // Adding default value
-            $table->timestamp('published_at')->nullable();
-            $table->unsignedBigInteger('previous_id')->nullable();
-            $table->unsignedBigInteger('next_id')->nullable();
-            $table->unsignedBigInteger('series_id')->nullable();
             $table->boolean('is_default')->default(false);
+            $table->timestamp('published_at')->nullable();
+            $table->text('description')->nullable();
+            $table->string('url');
+            $table->foreignId('previous_id')->nullable()->constrained('videos')->nullOnDelete();
+            $table->foreignId('next_id')->nullable()->constrained('videos')->nullOnDelete();
+            $table->foreignId('series_id')->nullable()->constrained('series')->nullOnDelete(); // Add this line
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

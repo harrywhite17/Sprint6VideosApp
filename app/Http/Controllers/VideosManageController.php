@@ -24,7 +24,7 @@ class VideosManageController extends Controller
         $data = $request->all();
         $data['user_id'] = Auth::id();
 
-        Video::create($request->all());
+        Video::create($data); // Use $data instead of $request->all()
         return redirect()->route('videos.manage.index')->with('success', 'Video created successfully.');
     }
 

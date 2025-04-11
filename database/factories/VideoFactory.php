@@ -16,15 +16,14 @@ class VideoFactory extends Factory
     {
         return [
             'title' => $this->faker->sentence,
-            'is_default' => false,
-            'published_at' => $this->faker->optional()->dateTime,
+            'is_default' => $this->faker->boolean,
+            'published_at' => $this->faker->dateTime,
             'description' => $this->faker->paragraph,
             'url' => $this->faker->url,
             'previous_id' => null,
             'next_id' => null,
-            'series_id' => null,
-            'created_at' => $this->faker->dateTime,
-            'user_id' => User::factory(),
+            'series_id' => \App\Models\Series::factory(), // Ensure this references a valid Series
+            'user_id' => \App\Models\User::factory(),
         ];
     }
 }

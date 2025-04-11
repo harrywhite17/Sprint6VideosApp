@@ -17,8 +17,9 @@ class SerieTest extends TestCase
         // Create a series
         $series = Series::factory()->create();
 
-        // Create a video and associate it with the series
-        $video = Video::factory()->create(['series_id' => $series->id]);
+        // Create a video and attach it to the series
+        $video = Video::factory()->create();
+        $series->videos()->attach($video->id);
 
         // Assert that the series has videos
         $this->assertTrue($series->videos->contains($video));

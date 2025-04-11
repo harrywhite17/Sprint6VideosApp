@@ -20,18 +20,16 @@ Route::get('/viideos/{id}', [VideosController::class, 'show'])->name('videos.sho
 
 // Video management routes (protected by middleware)
 Route::middleware(['auth', 'verified', 'role:video-manager|super-admin'])->group(function () {
-    Route::middleware(['auth', 'verified', 'role:video-manager|super-admin'])->prefix('videos/manage')->group(function () {
+    Route::prefix('videos/manage')->group(function () {
         Route::get('/', [VideosManageController::class, 'index'])->name('videos.manage.index');
         Route::get('/create', [VideosManageController::class, 'create'])->name('videos.manage.create');
         Route::post('/', [VideosManageController::class, 'store'])->name('videos.manage.store');
-        Route::get('/{video}', [VideosManageController::class, 'show'])->name('videos.manage.show'); // Ensure this exists
+        Route::get('/{video}', [VideosManageController::class, 'show'])->name('videos.manage.show');
         Route::get('/{video}/edit', [VideosManageController::class, 'edit'])->name('videos.manage.edit');
         Route::put('/{video}', [VideosManageController::class, 'update'])->name('videos.manage.update');
         Route::delete('/{video}', [VideosManageController::class, 'destroy'])->name('videos.manage.destroy');
     });
 });
-
-Route::get('/users', [UsersManageController::class, 'index'])->name('users.index');
 
 // User management routes
 Route::middleware(['auth', 'verified', 'role:user-manager|super-admin'])->group(function () {
@@ -52,12 +50,18 @@ Route::middleware(['auth', 'verified', 'role:video-manager|super-admin'])->group
         Route::get('/', [SeriesManageController::class, 'index'])->name('series.manage.index');
         Route::get('/create', [SeriesManageController::class, 'create'])->name('series.create');
         Route::post('/', [SeriesManageController::class, 'store'])->name('series.store');
-        Route::get('/{series}/edit', [SeriesManageController::class, 'edit'])->name('series.edit');
-        Route::put('/{series}', [SeriesManageController::class, 'update'])->name('series.update'); // Added route
+        Route::get('/{series}/edit', [SeriesController::class, 'edit'])->name('series.edit');
+        Route::put('/{series}', [SeriesManageController::class, 'update'])->name('series.update');
         Route::delete('/{series}', [SeriesManageController::class, 'destroy'])->name('series.manage.destroy');
-        Route::get('/series/manage/{series}/delete', [SeriesManageController::class, 'delete'])->name('series.delete');    });
+        Route::post('/{series}/videos', [SeriesController::class, 'addVideoFromEdit'])->name('series.addVideoFromEdit');
+        Route::post('/{series}/videos/add', [SeriesController::class, 'addVideo'])->name('series.addVideo');
+        Route::delete('/{series}/videos/{video}', [SeriesController::class, 'removeVideo'])->name('series.removeVideo');
+    });
 });
 
 // Public series routes
 Route::get('/series', [SeriesController::class, 'index'])->name('series.index');
 Route::get('/series/{id}', [SeriesController::class, 'show'])->name('series.show');
+
+// Users public route (kept as-is)
+Route::get('/users', [UsersManageController::class, 'index'])->name('users.index');

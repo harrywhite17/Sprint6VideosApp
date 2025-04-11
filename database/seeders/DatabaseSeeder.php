@@ -32,7 +32,7 @@ class DatabaseSeeder extends Seeder
 
         $videos = VideoHelper::create_default_video($superadmin->id); // Pass superadmin's ID
         foreach ($videos as $video) {
-            $video->series()->associate($series);
+            $video->series()->attach($series->id);
             $video->save();
         }
     }

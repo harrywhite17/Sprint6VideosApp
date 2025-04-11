@@ -17,11 +17,12 @@ class Series extends Model
         'user_name',
         'user_photo_url',
         'published_at',
+        'user_id',
     ];
 
     public function videos()
     {
-        return $this->hasMany(Video::class);
+        return $this->belongsToMany(Video::class, 'series_video', 'series_id', 'video_id');
     }
 
     public function testedBy()
