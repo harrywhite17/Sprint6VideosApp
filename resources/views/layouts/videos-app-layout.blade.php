@@ -81,6 +81,7 @@
         <a href="{{ route('users.manage.create') }}">Create User</a>
         <a href="{{ route('series.index') }}">All Series</a>
         <a href="{{ route('series.manage.index') }}">Manage Series</a>
+        <a href="{{ route('notifications') }}">Notifications</a>
         @auth
             <span>Welcome, {{ Auth::user()->name }}</span>
             <form action="{{ route('logout') }}" method="POST" style="display: inline;">

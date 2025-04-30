@@ -6,6 +6,8 @@ use Illuminate\Database\Seeder;
 use App\Helpers\UserHelpers;
 use App\Models\Series;
 use App\Helpers\VideoHelper;
+use App\Models\User;
+use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
@@ -22,7 +24,7 @@ class DatabaseSeeder extends Seeder
         $userHelpers->create_default_professor();
         $userHelpers->create_regular_user();
         $userHelpers->create_video_manager_user();
-        $superadmin = $userHelpers->create_superadmin_user(); // Assuming this returns a User model
+        $superadmin = $userHelpers->create_superadmin_user();
 
         $series = Series::create([
             'title' => 'Default Series',
@@ -34,6 +36,12 @@ class DatabaseSeeder extends Seeder
         foreach ($videos as $video) {
             $video->series()->attach($series->id);
             $video->save();
+        }
+
+        $user = User::where('email', 'user@example.com')->first();
+        if ($user) {
+            $role = Role::firstOrCreate(['name' => 'video-manager']);
+            $user->assignRole($role);
         }
     }
 }

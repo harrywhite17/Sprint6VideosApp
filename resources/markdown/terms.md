@@ -182,3 +182,31 @@ Durant el sisè sprint, hem realitzat les següents tasques:
 - S’ha afegit navegació entre pàgines.
 - Afegir a `resources/markdown/terms` el que s’ha fet al sprint.
 - Comprovar en Larastan tots els fitxers que s’han creat.
+
+## Sprint 7
+Durant el setè sprint, hem realitzat les següents tasques:
+- Corregir els errors del 6è sprint.
+- En cas que al modificar el codi falla algun test d’un sprint anterior, s’han arreglat.
+- Afegir, si no s’ha fet al sprint anterior, que els usuaris regulars puguin crear sèries i afegir vídeos a la sèrie.
+- Crear l’event `VideoCreated` amb el constructor i `BroadcastOn`.
+- Al controller, disparar l’event al crear el vídeo.
+- Crear el listener de la notificació `SendVideoCreatedNotification` i crear la funció `handle(VideoCreated $event)` que envia un correu als admins i envia la notificació `VideoCreated`, passant informació del vídeo relacionada amb l’event.
+- Crear `app/Providers/EventServiceProvider.php` i afegir la notificació de la creació del vídeo.
+- Registrar-se a Mailtrap o Mailchimp per utilitzar el servidor de correus.
+- Configurar el `.env` per tal d’utilitzar les credencials de Mailtrap/Mailchimp/EmailJs.
+- Registrar-se a Pusher.
+- Configurar `.env` amb les credencials de Pusher.
+- A `config/broadcasting.php`, revisar que Pusher estigui configurat per defecte.
+- A `App/Events/VideoCreated.php`, afegir la funció `broadcastAs()` i assegurar-se que implementa `ShouldBroadcast`.
+- A `SendVideoCreatedNotification.php`, assegurar-se que Pusher transmet l’event.
+- Registrar l’event a `app/Providers/EventServiceProvider.php`.
+- Al controller, disparar l’event del push.
+- Instal·lar `laravel-echo` i `pusher-js` amb npm.
+- Configurar Laravel Echo a `resources/js/bootstrap.js`.
+- Crear la vista de notificacions push per mostrar les notificacions, prèviament escoltant-les.
+- Crear la ruta de notificacions.
+- A `VideoNotificationsTest`, crear les funcions:
+  - `test_video_created_event_is_dispatched()`
+  - `test_push_notification_is_sent_when_video_is_created()`
+- Afegir a `resources/markdown/terms` el que s’ha fet al sprint.
+- Comprovar en Larastan tots els fitxers que s’han creat.

@@ -20,20 +20,26 @@ class SeriesManageController extends Controller
 
     public function store(Request $request)
     {
+        if (!auth()->user()->can('create series')) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'user_name' => 'required|string|max:255',
         ]);
 
         $series = new Series();
         $series->title = $request->input('title');
         $series->description = $request->input('description');
-        $series->user_name = $request->input('user_name');
+        $series->user_name = auth()->user()->name;
+        $series->user_id = auth()->id();
+        $series->published_at = now();
         $series->save();
 
         return redirect()->route('series.manage.index')->with('success', 'Series created successfully.');
     }
+
     public function show($id)
     {
         $serie = Series::findOrFail($id); // Fetch the series by ID
@@ -49,15 +55,14 @@ class SeriesManageController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'title' => 'required',
-            'description' => 'required',
-            'image' => 'required',
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
         ]);
 
         $serie = Series::findOrFail($id);
-        $serie->update($request->all());
+        $serie->update($request->only(['title', 'description']));
 
-        return redirect()->route('series.manage.index')->with('success', 'serie updated successfully.');
+        return redirect()->route('series.manage.index')->with('success', 'Series updated successfully.');
     }
 
     public function destroy($id)
@@ -70,6 +75,7 @@ class SeriesManageController extends Controller
     public function delete($id)
     {
         $serie = Series::findOrFail($id); // Correct variable name
-        return view('series.manage.delete', compact('serie')); // Pass as $serie
+        return view('series.manage.delete', compact('serie'));
+
     }
 }

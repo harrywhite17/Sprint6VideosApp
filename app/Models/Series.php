@@ -19,7 +19,9 @@ class Series extends Model
         'published_at',
         'user_id',
     ];
-
+    protected $casts = [
+        'published_at' => 'datetime',
+    ];
     public function videos()
     {
         return $this->belongsToMany(Video::class, 'series_video', 'series_id', 'video_id');

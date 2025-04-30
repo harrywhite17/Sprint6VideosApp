@@ -48,7 +48,7 @@ class SeriesController extends Controller
 
     public function addVideo(Request $request, Series $series)
     {
-        if ($series->user_id !== auth()->id() && !auth()->user()->hasRole('super-admin')) {
+        if (!auth()->user()->can('add videos to series')) {
             abort(403, 'Unauthorized action.');
         }
 

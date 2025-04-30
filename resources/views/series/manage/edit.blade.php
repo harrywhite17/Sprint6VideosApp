@@ -18,8 +18,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="user_name" data-qa="label-user_name">User Name:</label>
-                    <input type="text" id="user_name" name="user_name" value="{{ $serie->user_name }}" required data-qa="input-user_name" class="form-control">
+                    <label for="user_name">User Name</label>
+                    <input type="text" id="user_name" class="form-control" value="{{ $serie->user_name }}" readonly>
                 </div>
 
                 <button type="submit" data-qa="button-submit" class="btn btn-primary">Update</button>

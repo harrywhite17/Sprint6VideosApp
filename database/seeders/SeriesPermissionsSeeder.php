@@ -17,6 +17,7 @@ class SeriesPermissionsSeeder extends Seeder
             'create series',
             'edit series',
             'delete series',
+            'create videos',
         ];
 
         foreach ($permissions as $permission) {
@@ -26,6 +27,10 @@ class SeriesPermissionsSeeder extends Seeder
         // Assign permissions to superadmin role
         $superadminRole = Role::firstOrCreate(['name' => 'superadmin']);
         $superadminRole->syncPermissions($permissions);
+
+        // Assignar permisos al rol d'usuari regular
+        $userRole = Role::firstOrCreate(['name' => 'user']);
+        $userRole->givePermissionTo('create videos'); // Assignar permís específic
 
         // Assign superadmin role to users
         $superadminUsers = User::where('is_superadmin', true)->get();

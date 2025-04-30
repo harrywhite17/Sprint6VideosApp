@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\VideoCreated;
+use App\Mail\VideoCreatedMail;
 use App\Models\Video;
+use App\Notifications\NewVideoNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class VideosManageController extends Controller
 {
@@ -24,7 +28,14 @@ class VideosManageController extends Controller
         $data = $request->all();
         $data['user_id'] = Auth::id();
 
-        Video::create($data); // Use $data instead of $request->all()
+        $video = Video::create($data);
+
+        $user = Auth::user();
+        $user->notify(new NewVideoNotification($video));
+        event(new VideoCreated($video));
+
+        Mail::to('admin@example.com')->send(new VideoCreatedMail($video));
+
         return redirect()->route('videos.manage.index')->with('success', 'Video created successfully.');
     }
 
