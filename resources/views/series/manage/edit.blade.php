@@ -35,7 +35,7 @@
                         @foreach($serie->videos as $video)
                             <li>
                                 <span>{{ $video->title }}</span>
-                                <form action="{{ route('series.removeVideo', [$serie->id, $video->id]) }}" method="POST" class="remove-form" onsubmit="return confirm('Are you sure you want to remove this video from the series?');">
+                                <form action="{{ route('series.manage.removeVideo', [$serie->id, $video->id]) }}" method="POST" class="remove-form" onsubmit="return confirm('Are you sure you want to remove this video from the series?');">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-delete">Remove</button>

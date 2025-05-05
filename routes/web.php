@@ -62,6 +62,7 @@ Route::middleware(['auth', 'verified', 'role:user|video-manager|super-admin'])->
 
     // Add and remove videos from a series
     Route::delete('/{series}/remove-video/{video}', [SeriesController::class, 'removeVideo'])->name('series.manage.removeVideo');
+    Route::post('/{series}/add-video-from-edit', [SeriesController::class, 'addVideoFromEdit'])->name('series.addVideoFromEdit');
 });
 
 // Public series routes
